@@ -2,19 +2,11 @@ services:
   - type: web
     name: django-backend
     env: python
-    buildCommand: cd backend && pip install -r requirements.txt
-    startCommand: cd backend && gunicorn backend_project.wsgi:application
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn backend_project.wsgi:application
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: productos_db
-          property: connectionString
-      - key: SECRET_KEY
-        generateValue: true
-      - key: DEBUG
-        value: False
       - key: PYTHON_VERSION
-        value: 3.10
-
-databases:
-  - name: productos_db
+        value: 3.11
+      - key: DJANGO_SETTINGS_MODULE
+        value: backend_project.settings
