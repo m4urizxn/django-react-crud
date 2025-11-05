@@ -1,15 +1,13 @@
 import os
-from pathlib import Path
 import dj_database_url
+from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ⚙️ Seguridad
-SECRET_KEY = os.environ.get("SECRET_KEY", "cambia-esto-por-una-clave-secreta")
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+SECRET_KEY = os.getenv("SECRET_KEY", "cambia-esto-por-una-clave-secreta")
+DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = ["*"]
 
-# 📦 Aplicaciones instaladas
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -22,11 +20,9 @@ INSTALLED_APPS = [
     "api",
 ]
 
-# 🧩 Middleware
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # para archivos estáticos
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -55,42 +51,31 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "backend_project.wsgi.application"
 
-# ⚙️ Base de datos (PostgreSQL Render)
+# ✅ Conexión automática a PostgreSQL en Render
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.environ.get("postgresql://ropa_db_user:4DOgXFIuIZ6HETx377rj9N8pVCcBbAZe@dpg-d45ms3qli9vc73844m8g-a/ropa_db"),
+        default=os.getenv(
+            "DATABASE_URL",
+            "postgresql://ropa_db_user:4DOgXFIuIZ6HETx377rj9N8pVCcBbAZe@dpg-d45ms3qli9vc73844m8g-a/ropa_db"
+        ),
         conn_max_age=600,
         ssl_require=True
     )
 }
 
-# 🔑 Validadores
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-]
+AUTH_PASSWORD_VALIDATORS = []
 
-# 🌎 Configuración regional
 LANGUAGE_CODE = "es-es"
 TIME_ZONE = "America/Lima"
 USE_I18N = True
 USE_TZ = True
 
-# 🧾 Archivos estáticos y media
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-# ⚙️ Whitenoise
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# 🌐 CORS (permitir acceso desde React)
 CORS_ALLOW_ALL_ORIGINS = True
