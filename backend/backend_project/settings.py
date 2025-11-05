@@ -58,7 +58,7 @@ WSGI_APPLICATION = "backend_project.wsgi.application"
 # ⚙️ Base de datos (PostgreSQL Render)
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
+        default=os.environ.get("postgresql://ropa_db_user:4DOgXFIuIZ6HETx377rj9N8pVCcBbAZe@dpg-d45ms3qli9vc73844m8g-a/ropa_db"),
         conn_max_age=600,
         ssl_require=True
     )
