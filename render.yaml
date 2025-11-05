@@ -1,4 +1,5 @@
 services:
+  # 🐍 Backend - Django
   - type: web
     name: django-backend
     env: python
@@ -15,3 +16,18 @@ services:
         value: backend_project.settings
       - key: DATABASE_URL
         value: postgresql://ropa_db_user:4DOgXFIuIZ6HETx377rj9N8pVCcBbAZe@dpg-d45ms3qli9vc73844m8g-a/ropa_db
+      - key: SECRET_KEY
+        generateValue: true
+    plan: free
+
+  # ⚛️ Frontend - React
+  - type: web
+    name: react-frontend
+    env: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npx serve -s build
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+    plan: free
