@@ -4,18 +4,19 @@ services:
     name: django-backend
     env: python
     rootDir: backend
-    buildCommand: |
-      pip install -r requirements.txt
-      python manage.py migrate --noinput
-      python manage.py collectstatic --noinput
+    buildCommand: chmod +x build.sh && ./build.sh
     startCommand: gunicorn backend_project.wsgi:application
     envVars:
       - key: DATABASE_URL
-        value: "postgresql://ropa_db_user:4DOgXFIuIZ6HETx377rj9N8pVCcBbAZe@dpg-d45ms3qli9vc73844m8g-a/ropa_db"
+        fromDatabase:
+          name: ropa-db
+          property: connectionString
       - key: PYTHON_VERSION
         value: "3.11"
-      - key: DJANGO_SETTINGS_MODULE
-        value: backend_project.settings
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
 
   # Frontend React
   - type: web
@@ -23,7 +24,14 @@ services:
     env: node
     rootDir: frontend
     buildCommand: npm install && npm run build
-    startCommand: npx serve -s build
+    startCommand: npx serve -s build -p $PORT
     envVars:
       - key: NODE_VERSION
         value: "18"
+      - key: REACT_APP_API_URL
+        value: https://django-backend.onrender.com
+
+databases:
+  - name: ropa-db
+    databaseName: ropa_db
+    user: ropa_user
